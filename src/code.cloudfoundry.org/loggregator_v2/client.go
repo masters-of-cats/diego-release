@@ -19,8 +19,18 @@ import (
 
 //go:generate counterfeiter -o fakes/fake_client.go . Client
 
+type Batcher interface {
+	ComponentMetricsClient
+	Close() error
+}
+
 type ComponentClient interface {
+	ComponentMetricsClient
+	Batcher() Batcher
 	IncrementCounter(name string) error
+}
+
+type ComponentMetricsClient interface {
 	SendDuration(name string, value time.Duration) error
 	SendMebiBytes(name string, value int) error
 	SendMetric(name string, value int) error
@@ -29,10 +39,10 @@ type ComponentClient interface {
 }
 
 type Client interface {
+	ComponentClient
 	SendAppLog(appID, message, sourceType, sourceInstance string) error
 	SendAppErrorLog(appID, message, sourceType, sourceInstance string) error
 	SendAppMetrics(metrics *events.ContainerMetric) error
-	ComponentClient
 }
 
 type MetronConfig struct {

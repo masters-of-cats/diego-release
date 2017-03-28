@@ -10,44 +10,6 @@ import (
 )
 
 type FakeClient struct {
-	SendAppLogStub        func(appID, message, sourceType, sourceInstance string) error
-	sendAppLogMutex       sync.RWMutex
-	sendAppLogArgsForCall []struct {
-		appID          string
-		message        string
-		sourceType     string
-		sourceInstance string
-	}
-	sendAppLogReturns struct {
-		result1 error
-	}
-	SendAppErrorLogStub        func(appID, message, sourceType, sourceInstance string) error
-	sendAppErrorLogMutex       sync.RWMutex
-	sendAppErrorLogArgsForCall []struct {
-		appID          string
-		message        string
-		sourceType     string
-		sourceInstance string
-	}
-	sendAppErrorLogReturns struct {
-		result1 error
-	}
-	SendAppMetricsStub        func(metrics *events.ContainerMetric) error
-	sendAppMetricsMutex       sync.RWMutex
-	sendAppMetricsArgsForCall []struct {
-		metrics *events.ContainerMetric
-	}
-	sendAppMetricsReturns struct {
-		result1 error
-	}
-	IncrementCounterStub        func(name string) error
-	incrementCounterMutex       sync.RWMutex
-	incrementCounterArgsForCall []struct {
-		name string
-	}
-	incrementCounterReturns struct {
-		result1 error
-	}
 	SendDurationStub        func(name string, value time.Duration) error
 	sendDurationMutex       sync.RWMutex
 	sendDurationArgsForCall []struct {
@@ -93,146 +55,52 @@ type FakeClient struct {
 	sendRequestsPerSecondReturns struct {
 		result1 error
 	}
+	BatcherStub        func() loggregator_v2.Batcher
+	batcherMutex       sync.RWMutex
+	batcherArgsForCall []struct{}
+	batcherReturns     struct {
+		result1 loggregator_v2.Batcher
+	}
+	IncrementCounterStub        func(name string) error
+	incrementCounterMutex       sync.RWMutex
+	incrementCounterArgsForCall []struct {
+		name string
+	}
+	incrementCounterReturns struct {
+		result1 error
+	}
+	SendAppLogStub        func(appID, message, sourceType, sourceInstance string) error
+	sendAppLogMutex       sync.RWMutex
+	sendAppLogArgsForCall []struct {
+		appID          string
+		message        string
+		sourceType     string
+		sourceInstance string
+	}
+	sendAppLogReturns struct {
+		result1 error
+	}
+	SendAppErrorLogStub        func(appID, message, sourceType, sourceInstance string) error
+	sendAppErrorLogMutex       sync.RWMutex
+	sendAppErrorLogArgsForCall []struct {
+		appID          string
+		message        string
+		sourceType     string
+		sourceInstance string
+	}
+	sendAppErrorLogReturns struct {
+		result1 error
+	}
+	SendAppMetricsStub        func(metrics *events.ContainerMetric) error
+	sendAppMetricsMutex       sync.RWMutex
+	sendAppMetricsArgsForCall []struct {
+		metrics *events.ContainerMetric
+	}
+	sendAppMetricsReturns struct {
+		result1 error
+	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
-}
-
-func (fake *FakeClient) SendAppLog(appID string, message string, sourceType string, sourceInstance string) error {
-	fake.sendAppLogMutex.Lock()
-	fake.sendAppLogArgsForCall = append(fake.sendAppLogArgsForCall, struct {
-		appID          string
-		message        string
-		sourceType     string
-		sourceInstance string
-	}{appID, message, sourceType, sourceInstance})
-	fake.recordInvocation("SendAppLog", []interface{}{appID, message, sourceType, sourceInstance})
-	fake.sendAppLogMutex.Unlock()
-	if fake.SendAppLogStub != nil {
-		return fake.SendAppLogStub(appID, message, sourceType, sourceInstance)
-	} else {
-		return fake.sendAppLogReturns.result1
-	}
-}
-
-func (fake *FakeClient) SendAppLogCallCount() int {
-	fake.sendAppLogMutex.RLock()
-	defer fake.sendAppLogMutex.RUnlock()
-	return len(fake.sendAppLogArgsForCall)
-}
-
-func (fake *FakeClient) SendAppLogArgsForCall(i int) (string, string, string, string) {
-	fake.sendAppLogMutex.RLock()
-	defer fake.sendAppLogMutex.RUnlock()
-	return fake.sendAppLogArgsForCall[i].appID, fake.sendAppLogArgsForCall[i].message, fake.sendAppLogArgsForCall[i].sourceType, fake.sendAppLogArgsForCall[i].sourceInstance
-}
-
-func (fake *FakeClient) SendAppLogReturns(result1 error) {
-	fake.SendAppLogStub = nil
-	fake.sendAppLogReturns = struct {
-		result1 error
-	}{result1}
-}
-
-func (fake *FakeClient) SendAppErrorLog(appID string, message string, sourceType string, sourceInstance string) error {
-	fake.sendAppErrorLogMutex.Lock()
-	fake.sendAppErrorLogArgsForCall = append(fake.sendAppErrorLogArgsForCall, struct {
-		appID          string
-		message        string
-		sourceType     string
-		sourceInstance string
-	}{appID, message, sourceType, sourceInstance})
-	fake.recordInvocation("SendAppErrorLog", []interface{}{appID, message, sourceType, sourceInstance})
-	fake.sendAppErrorLogMutex.Unlock()
-	if fake.SendAppErrorLogStub != nil {
-		return fake.SendAppErrorLogStub(appID, message, sourceType, sourceInstance)
-	} else {
-		return fake.sendAppErrorLogReturns.result1
-	}
-}
-
-func (fake *FakeClient) SendAppErrorLogCallCount() int {
-	fake.sendAppErrorLogMutex.RLock()
-	defer fake.sendAppErrorLogMutex.RUnlock()
-	return len(fake.sendAppErrorLogArgsForCall)
-}
-
-func (fake *FakeClient) SendAppErrorLogArgsForCall(i int) (string, string, string, string) {
-	fake.sendAppErrorLogMutex.RLock()
-	defer fake.sendAppErrorLogMutex.RUnlock()
-	return fake.sendAppErrorLogArgsForCall[i].appID, fake.sendAppErrorLogArgsForCall[i].message, fake.sendAppErrorLogArgsForCall[i].sourceType, fake.sendAppErrorLogArgsForCall[i].sourceInstance
-}
-
-func (fake *FakeClient) SendAppErrorLogReturns(result1 error) {
-	fake.SendAppErrorLogStub = nil
-	fake.sendAppErrorLogReturns = struct {
-		result1 error
-	}{result1}
-}
-
-func (fake *FakeClient) SendAppMetrics(metrics *events.ContainerMetric) error {
-	fake.sendAppMetricsMutex.Lock()
-	fake.sendAppMetricsArgsForCall = append(fake.sendAppMetricsArgsForCall, struct {
-		metrics *events.ContainerMetric
-	}{metrics})
-	fake.recordInvocation("SendAppMetrics", []interface{}{metrics})
-	fake.sendAppMetricsMutex.Unlock()
-	if fake.SendAppMetricsStub != nil {
-		return fake.SendAppMetricsStub(metrics)
-	} else {
-		return fake.sendAppMetricsReturns.result1
-	}
-}
-
-func (fake *FakeClient) SendAppMetricsCallCount() int {
-	fake.sendAppMetricsMutex.RLock()
-	defer fake.sendAppMetricsMutex.RUnlock()
-	return len(fake.sendAppMetricsArgsForCall)
-}
-
-func (fake *FakeClient) SendAppMetricsArgsForCall(i int) *events.ContainerMetric {
-	fake.sendAppMetricsMutex.RLock()
-	defer fake.sendAppMetricsMutex.RUnlock()
-	return fake.sendAppMetricsArgsForCall[i].metrics
-}
-
-func (fake *FakeClient) SendAppMetricsReturns(result1 error) {
-	fake.SendAppMetricsStub = nil
-	fake.sendAppMetricsReturns = struct {
-		result1 error
-	}{result1}
-}
-
-func (fake *FakeClient) IncrementCounter(name string) error {
-	fake.incrementCounterMutex.Lock()
-	fake.incrementCounterArgsForCall = append(fake.incrementCounterArgsForCall, struct {
-		name string
-	}{name})
-	fake.recordInvocation("IncrementCounter", []interface{}{name})
-	fake.incrementCounterMutex.Unlock()
-	if fake.IncrementCounterStub != nil {
-		return fake.IncrementCounterStub(name)
-	} else {
-		return fake.incrementCounterReturns.result1
-	}
-}
-
-func (fake *FakeClient) IncrementCounterCallCount() int {
-	fake.incrementCounterMutex.RLock()
-	defer fake.incrementCounterMutex.RUnlock()
-	return len(fake.incrementCounterArgsForCall)
-}
-
-func (fake *FakeClient) IncrementCounterArgsForCall(i int) string {
-	fake.incrementCounterMutex.RLock()
-	defer fake.incrementCounterMutex.RUnlock()
-	return fake.incrementCounterArgsForCall[i].name
-}
-
-func (fake *FakeClient) IncrementCounterReturns(result1 error) {
-	fake.IncrementCounterStub = nil
-	fake.incrementCounterReturns = struct {
-		result1 error
-	}{result1}
 }
 
 func (fake *FakeClient) SendDuration(name string, value time.Duration) error {
@@ -405,17 +273,172 @@ func (fake *FakeClient) SendRequestsPerSecondReturns(result1 error) {
 	}{result1}
 }
 
+func (fake *FakeClient) Batcher() loggregator_v2.Batcher {
+	fake.batcherMutex.Lock()
+	fake.batcherArgsForCall = append(fake.batcherArgsForCall, struct{}{})
+	fake.recordInvocation("Batcher", []interface{}{})
+	fake.batcherMutex.Unlock()
+	if fake.BatcherStub != nil {
+		return fake.BatcherStub()
+	} else {
+		return fake.batcherReturns.result1
+	}
+}
+
+func (fake *FakeClient) BatcherCallCount() int {
+	fake.batcherMutex.RLock()
+	defer fake.batcherMutex.RUnlock()
+	return len(fake.batcherArgsForCall)
+}
+
+func (fake *FakeClient) BatcherReturns(result1 loggregator_v2.Batcher) {
+	fake.BatcherStub = nil
+	fake.batcherReturns = struct {
+		result1 loggregator_v2.Batcher
+	}{result1}
+}
+
+func (fake *FakeClient) IncrementCounter(name string) error {
+	fake.incrementCounterMutex.Lock()
+	fake.incrementCounterArgsForCall = append(fake.incrementCounterArgsForCall, struct {
+		name string
+	}{name})
+	fake.recordInvocation("IncrementCounter", []interface{}{name})
+	fake.incrementCounterMutex.Unlock()
+	if fake.IncrementCounterStub != nil {
+		return fake.IncrementCounterStub(name)
+	} else {
+		return fake.incrementCounterReturns.result1
+	}
+}
+
+func (fake *FakeClient) IncrementCounterCallCount() int {
+	fake.incrementCounterMutex.RLock()
+	defer fake.incrementCounterMutex.RUnlock()
+	return len(fake.incrementCounterArgsForCall)
+}
+
+func (fake *FakeClient) IncrementCounterArgsForCall(i int) string {
+	fake.incrementCounterMutex.RLock()
+	defer fake.incrementCounterMutex.RUnlock()
+	return fake.incrementCounterArgsForCall[i].name
+}
+
+func (fake *FakeClient) IncrementCounterReturns(result1 error) {
+	fake.IncrementCounterStub = nil
+	fake.incrementCounterReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeClient) SendAppLog(appID string, message string, sourceType string, sourceInstance string) error {
+	fake.sendAppLogMutex.Lock()
+	fake.sendAppLogArgsForCall = append(fake.sendAppLogArgsForCall, struct {
+		appID          string
+		message        string
+		sourceType     string
+		sourceInstance string
+	}{appID, message, sourceType, sourceInstance})
+	fake.recordInvocation("SendAppLog", []interface{}{appID, message, sourceType, sourceInstance})
+	fake.sendAppLogMutex.Unlock()
+	if fake.SendAppLogStub != nil {
+		return fake.SendAppLogStub(appID, message, sourceType, sourceInstance)
+	} else {
+		return fake.sendAppLogReturns.result1
+	}
+}
+
+func (fake *FakeClient) SendAppLogCallCount() int {
+	fake.sendAppLogMutex.RLock()
+	defer fake.sendAppLogMutex.RUnlock()
+	return len(fake.sendAppLogArgsForCall)
+}
+
+func (fake *FakeClient) SendAppLogArgsForCall(i int) (string, string, string, string) {
+	fake.sendAppLogMutex.RLock()
+	defer fake.sendAppLogMutex.RUnlock()
+	return fake.sendAppLogArgsForCall[i].appID, fake.sendAppLogArgsForCall[i].message, fake.sendAppLogArgsForCall[i].sourceType, fake.sendAppLogArgsForCall[i].sourceInstance
+}
+
+func (fake *FakeClient) SendAppLogReturns(result1 error) {
+	fake.SendAppLogStub = nil
+	fake.sendAppLogReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeClient) SendAppErrorLog(appID string, message string, sourceType string, sourceInstance string) error {
+	fake.sendAppErrorLogMutex.Lock()
+	fake.sendAppErrorLogArgsForCall = append(fake.sendAppErrorLogArgsForCall, struct {
+		appID          string
+		message        string
+		sourceType     string
+		sourceInstance string
+	}{appID, message, sourceType, sourceInstance})
+	fake.recordInvocation("SendAppErrorLog", []interface{}{appID, message, sourceType, sourceInstance})
+	fake.sendAppErrorLogMutex.Unlock()
+	if fake.SendAppErrorLogStub != nil {
+		return fake.SendAppErrorLogStub(appID, message, sourceType, sourceInstance)
+	} else {
+		return fake.sendAppErrorLogReturns.result1
+	}
+}
+
+func (fake *FakeClient) SendAppErrorLogCallCount() int {
+	fake.sendAppErrorLogMutex.RLock()
+	defer fake.sendAppErrorLogMutex.RUnlock()
+	return len(fake.sendAppErrorLogArgsForCall)
+}
+
+func (fake *FakeClient) SendAppErrorLogArgsForCall(i int) (string, string, string, string) {
+	fake.sendAppErrorLogMutex.RLock()
+	defer fake.sendAppErrorLogMutex.RUnlock()
+	return fake.sendAppErrorLogArgsForCall[i].appID, fake.sendAppErrorLogArgsForCall[i].message, fake.sendAppErrorLogArgsForCall[i].sourceType, fake.sendAppErrorLogArgsForCall[i].sourceInstance
+}
+
+func (fake *FakeClient) SendAppErrorLogReturns(result1 error) {
+	fake.SendAppErrorLogStub = nil
+	fake.sendAppErrorLogReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeClient) SendAppMetrics(metrics *events.ContainerMetric) error {
+	fake.sendAppMetricsMutex.Lock()
+	fake.sendAppMetricsArgsForCall = append(fake.sendAppMetricsArgsForCall, struct {
+		metrics *events.ContainerMetric
+	}{metrics})
+	fake.recordInvocation("SendAppMetrics", []interface{}{metrics})
+	fake.sendAppMetricsMutex.Unlock()
+	if fake.SendAppMetricsStub != nil {
+		return fake.SendAppMetricsStub(metrics)
+	} else {
+		return fake.sendAppMetricsReturns.result1
+	}
+}
+
+func (fake *FakeClient) SendAppMetricsCallCount() int {
+	fake.sendAppMetricsMutex.RLock()
+	defer fake.sendAppMetricsMutex.RUnlock()
+	return len(fake.sendAppMetricsArgsForCall)
+}
+
+func (fake *FakeClient) SendAppMetricsArgsForCall(i int) *events.ContainerMetric {
+	fake.sendAppMetricsMutex.RLock()
+	defer fake.sendAppMetricsMutex.RUnlock()
+	return fake.sendAppMetricsArgsForCall[i].metrics
+}
+
+func (fake *FakeClient) SendAppMetricsReturns(result1 error) {
+	fake.SendAppMetricsStub = nil
+	fake.sendAppMetricsReturns = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeClient) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
-	fake.sendAppLogMutex.RLock()
-	defer fake.sendAppLogMutex.RUnlock()
-	fake.sendAppErrorLogMutex.RLock()
-	defer fake.sendAppErrorLogMutex.RUnlock()
-	fake.sendAppMetricsMutex.RLock()
-	defer fake.sendAppMetricsMutex.RUnlock()
-	fake.incrementCounterMutex.RLock()
-	defer fake.incrementCounterMutex.RUnlock()
 	fake.sendDurationMutex.RLock()
 	defer fake.sendDurationMutex.RUnlock()
 	fake.sendMebiBytesMutex.RLock()
@@ -426,6 +449,16 @@ func (fake *FakeClient) Invocations() map[string][][]interface{} {
 	defer fake.sendBytesPerSecondMutex.RUnlock()
 	fake.sendRequestsPerSecondMutex.RLock()
 	defer fake.sendRequestsPerSecondMutex.RUnlock()
+	fake.batcherMutex.RLock()
+	defer fake.batcherMutex.RUnlock()
+	fake.incrementCounterMutex.RLock()
+	defer fake.incrementCounterMutex.RUnlock()
+	fake.sendAppLogMutex.RLock()
+	defer fake.sendAppLogMutex.RUnlock()
+	fake.sendAppErrorLogMutex.RLock()
+	defer fake.sendAppErrorLogMutex.RUnlock()
+	fake.sendAppMetricsMutex.RLock()
+	defer fake.sendAppMetricsMutex.RUnlock()
 	return fake.invocations
 }
 

@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"code.cloudfoundry.org/loggregator_v2"
-	context "golang.org/x/net/context"
+	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
 )
 

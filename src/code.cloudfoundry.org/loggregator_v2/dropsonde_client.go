@@ -10,6 +10,14 @@ import (
 
 type dropsondeClient struct{}
 
+func (c *dropsondeClient) Batcher() Batcher {
+	return c
+}
+
+func (c *dropsondeClient) Close() error {
+	return nil
+}
+
 func (c *dropsondeClient) IncrementCounter(name string) error {
 	return metrics.IncrementCounter(name)
 }
