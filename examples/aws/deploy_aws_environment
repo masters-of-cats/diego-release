@@ -201,12 +201,24 @@ if ! aws iam get-server-certificate --server-certificate-name cfrouter; then
     --certificate-body file://certs/elb-cfrouter.pem
 fi
 
+
+if ! aws iam get-server-certificate --server-certificate-name tcp-cfrouter; then
+  aws iam upload-server-certificate                   \
+    --server-certificate-name tcp-cfrouter                \
+    --private-key file://certs/elb-tcp-cfrouter.key       \
+    --certificate-body file://certs/elb-tcp-cfrouter.pem
+fi
+
 # generate stub to be fed into template for cloudformation
 cat > stubs/infrastructure/certificates.yml <<EOF
 # GENERATED: NO TOUCHING
 EOF
 
 aws iam get-server-certificate --server-certificate-name cfrouter \
+  >> stubs/infrastructure/certificates.yml
+
+
+aws iam get-server-certificate --server-certificate-name tcp-cfrouter \
   >> stubs/infrastructure/certificates.yml
 
 function extra_subnets {
@@ -229,6 +241,7 @@ spiff merge \
   stubs/bosh/vars.yml \
   stubs/domain.yml \
   stubs/infrastructure/certificates.yml \
+  stubs/infrastructure/elb.yml \
   $SCRIPT_DIR/templates/infrastructure/meta.yml \
   stubs/infrastructure/availability_zones.yml \
   <(extra_subnets) \

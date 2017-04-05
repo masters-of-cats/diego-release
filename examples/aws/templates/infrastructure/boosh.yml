@@ -53,6 +53,24 @@ default_subnets:
     route_table:
       internet_gateway: VPCGateway
 
+  - name: CFTCPELBZ1
+    cidr: (( merge ))
+    availability_zone: (( merge ))
+    route_table:
+      internet_gateway: VPCGateway
+
+  - name: CFTCPELBZ2
+    cidr: (( merge ))
+    availability_zone: (( merge ))
+    route_table:
+      internet_gateway: VPCGateway
+
+  - name: CFTCPELBZ3
+    cidr: (( merge ))
+    availability_zone: (( merge ))
+    route_table:
+      internet_gateway: VPCGateway
+
   - name: SSHProxyELBZ1
     cidr: (( merge ))
     availability_zone: (( merge ))
@@ -181,6 +199,22 @@ load_balancers:
       - Web
     cross_zone: true
 
+  - name: CFTCPELB
+    dns_record: "tcp"
+    listeners: (( merge ))
+    health_check:
+      timeout: 2
+      interval: 12
+      unhealthy_threshold: 2
+      healthy_threshold: 5
+    subnets:
+      - CFTCPELBZ1
+      - CFTCPELBZ2
+      - CFTCPELBZ3
+    security_groups:
+      - TCPWeb
+    cross_zone: true
+
   - name: SSHProxyELB
     dns_record: "ssh"
     listeners: (( merge ))
@@ -257,5 +291,10 @@ security_groups:
       - protocol: tcp
         cidr: 0.0.0.0/0
         ports: 2222
+
+  - name: TCPWeb
+    ingress:
+      - protocol: tcp
+        cidr: 0.0.0.0/0
 
 default_key_name: (( merge ))
