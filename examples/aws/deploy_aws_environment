@@ -212,14 +212,9 @@ fi
 # generate stub to be fed into template for cloudformation
 cat > stubs/infrastructure/certificates.yml <<EOF
 # GENERATED: NO TOUCHING
+HTTP: $(aws iam get-server-certificate --server-certificate-name cfrouter)
+TCP: $(aws iam get-server-certificate --server-certificate-name tcp-cfrouter)
 EOF
-
-aws iam get-server-certificate --server-certificate-name cfrouter \
-  >> stubs/infrastructure/certificates.yml
-
-
-aws iam get-server-certificate --server-certificate-name tcp-cfrouter \
-  >> stubs/infrastructure/certificates.yml
 
 function extra_subnets {
   cat <<EOF
@@ -241,7 +236,6 @@ spiff merge \
   stubs/bosh/vars.yml \
   stubs/domain.yml \
   stubs/infrastructure/certificates.yml \
-  stubs/infrastructure/elb.yml \
   $SCRIPT_DIR/templates/infrastructure/meta.yml \
   stubs/infrastructure/availability_zones.yml \
   <(extra_subnets) \

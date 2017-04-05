@@ -53,19 +53,19 @@ default_subnets:
     route_table:
       internet_gateway: VPCGateway
 
-  - name: CFTCPELBZ1
+  - name: TCPELBZ1
     cidr: (( merge ))
     availability_zone: (( merge ))
     route_table:
       internet_gateway: VPCGateway
 
-  - name: CFTCPELBZ2
+  - name: TCPELBZ2
     cidr: (( merge ))
     availability_zone: (( merge ))
     route_table:
       internet_gateway: VPCGateway
 
-  - name: CFTCPELBZ3
+  - name: TCPELBZ3
     cidr: (( merge ))
     availability_zone: (( merge ))
     route_table:
@@ -199,18 +199,21 @@ load_balancers:
       - Web
     cross_zone: true
 
-  - name: CFTCPELB
+  - name: TCPELB
     dns_record: "tcp"
     listeners: (( merge ))
     health_check:
+      target:
+        protocol: tcp
+        port: 80
       timeout: 2
       interval: 12
       unhealthy_threshold: 2
       healthy_threshold: 5
     subnets:
-      - CFTCPELBZ1
-      - CFTCPELBZ2
-      - CFTCPELBZ3
+      - TCPELBZ1
+      - TCPELBZ2
+      - TCPELBZ3
     security_groups:
       - TCPWeb
     cross_zone: true
@@ -296,5 +299,6 @@ security_groups:
     ingress:
       - protocol: tcp
         cidr: 0.0.0.0/0
+        ports: 0-65535
 
 default_key_name: (( merge ))
