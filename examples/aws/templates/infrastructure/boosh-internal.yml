@@ -97,15 +97,15 @@ default_subnets:
     cidr: (( meta.vpc.base ".21.0/24" ))
     availability_zone: (( meta.availability_zones.[1] ))
 
-  - name: TCPELBZ1
+  - name: ROUTINGZ1
     cidr: (( meta.vpc.base ".22.0/24" ))
     availability_zone: (( meta.availability_zones.[0] ))
 
-  - name: TCPELBZ2
+  - name: ROUTINGZ2
     cidr: (( meta.vpc.base ".23.0/24" ))
     availability_zone: (( meta.availability_zones.[1] ))
 
-  - name: TCPELBZ3
+  - name: ROUTINGZ3
     cidr: (( meta.vpc.base ".24.0/24" ))
     availability_zone: (( meta.availability_zones.[2] ))
 
@@ -124,14 +124,6 @@ load_balancers:
         destination_protocol: tcp
         destination_port: 80
         ssl_certificate_id: (( HTTP.ServerCertificate.ServerCertificateMetadata.Arn ))
-
-  - name: TCPELB
-    listeners:
-      - protocol: tcp
-        port: 80
-        destination_protocol: tcp
-        destination_port: 80
-        ssl_certificate_id: (( TCP.ServerCertificate.ServerCertificateMetadata.Arn ))
 
   - name: SSHProxyELB
     listeners:
