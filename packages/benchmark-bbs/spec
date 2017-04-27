@@ -16,6 +16,7 @@ files:
   - code.cloudfoundry.org/bbs/events/*.go # gosub
   - code.cloudfoundry.org/bbs/format/*.go # gosub
   - code.cloudfoundry.org/bbs/guidprovider/*.go # gosub
+  - code.cloudfoundry.org/bbs/metrics/*.go # gosub
   - code.cloudfoundry.org/bbs/models/*.go # gosub
   - code.cloudfoundry.org/benchmarkbbs/*.go # gosub
   - code.cloudfoundry.org/benchmarkbbs/config/*.go # gosub

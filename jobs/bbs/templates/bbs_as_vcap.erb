@@ -11,7 +11,13 @@ export GOMAXPROCS=$(nproc)
 # Work around for GOLANG 1.5.3 DNS bug
 export GODEBUG=netdns=cgo
 
+flush_flag=""
+<% if_p("diego.bbs.flush_every_second") do |value| %>
+flush_flag=-flush-every-second=<%=value%>
+<% end %>
+
 /var/vcap/packages/bbs/bin/bbs \
     -config=$CONF_DIR/bbs.json \
+    ${flush_flag} \
     2> >(tee -a $LOG_DIR/bbs.stderr.log | logger -p user.error -t vcap.bbs) \
     1> >(tee -a $LOG_DIR/bbs.stdout.log | logger -p user.info -t vcap.bbs) & echo $! > $PIDFILE
